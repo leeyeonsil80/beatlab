@@ -1,0 +1,1177 @@
+@charset "utf-8";
+
+:root {
+    --bg-color: #1a1a1a;
+    --text: #fff;
+    --border-color: #444;
+    --input-color: #2A2A2A;
+    --impact-color:#46ff99;
+    /* Padding */
+    --space-4: clamp(2px, calc(100vw * 4 / 1920), 4px);
+    --space-8: clamp(4px, calc(100vw * 8 / 1920), 8px);
+    --space-12: clamp(6px, calc(100vw * 12 / 1320), 12px);
+    --space-16: clamp(8px, calc(100vw * 16 / 1920), 16px);
+    --space-20: clamp(14px, calc(100vw * 20 / 1920), 20px);
+    --space-24: clamp(16px, calc(100vw * 24 / 1920), 24px);
+    --space-30: clamp(15px, calc(100vw * 30 / 1920), 30px);
+    --space-32: clamp(16px, calc(100vw * 32 / 1920), 32px);
+    --space-40: clamp(20px, calc(100vw * 40 / 1920), 40px);
+    --space-48: clamp(24px, calc(100vw * 48 / 1920), 48px);
+    --space-50: clamp(25px, calc(100vw * 50 / 1920), 50px);
+    --space-64: clamp(32px, calc(100vw * 64 / 1920), 64px);
+    --space-80: clamp(30px, calc(100vw * 80 / 1920), 80px);
+    --space-100: clamp(40px, calc(100vw * 100 / 1920), 100px);
+    --space-120: clamp(60px, calc(100vw * 120 / 1920), 120px);
+    --space-130: clamp(65px, calc(100vw * 130 / 1920), 130px);
+    --space-150: clamp(40px, calc(100vw * 150 / 1920), 150px);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+ul,
+ol {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+img,
+video,
+iframe {
+    display: block;
+    max-width: 100%;
+}
+
+/* button, input 기본 스타일 리셋*/
+button {
+    all: unset;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+input,
+textarea,
+select {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+    border-radius: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'pretendard';
+    font-size: 16px;
+    background-color: var(--bg-color);
+    color: var(--text);
+    transition:
+        background-color .6s ease,
+        color .6s ease;
+}
+
+.light {
+    color: #1a1a1a;
+    background-color: #fff;
+}
+
+/*header*/
+.container {
+    max-width: 1320px;
+    margin: 0 auto;
+}
+
+.header {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 clamp(40px,4vw,80px);
+    background:transparent;
+    transition:.35s;
+    z-index: 1001;
+}
+.header.is-dark{
+    background:rgba(26,26,26,.85);
+    color:#fff;
+    backdrop-filter:blur(16px);
+}
+.logo img {
+    display: block;
+}
+
+.logo-mo {
+    display: none;
+}
+
+
+/* =========================
+    PC MENU
+========================= */
+
+.gnb ul {
+    display: flex;
+    gap: clamp(20px,2.6vw,50px);
+}
+
+.menu_link{
+    display:inline-block;
+    overflow:hidden;
+    color:#fff;
+    text-decoration:none;    
+    word-break:keep-all;
+}
+
+.rolling-text{
+    display:flex;
+}
+.char{
+    display:inline-block;
+    overflow:hidden;
+}
+.rolling-text .char{
+    height:1em;
+    line-height: 1em;
+}
+
+
+.char-inner{
+    display:flex;
+    flex-direction:column;
+    transform:translateY(2px);
+}
+
+.char-inner span{
+    display:block;
+    line-height:1em;
+}
+
+.char.space{
+    width:.35em;
+}
+/* =========================
+    HAMBURGER
+========================= */
+
+.menu-btn {
+    display: none;
+    width: 44px;
+    height: 44px;
+    position: relative;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    z-index: 1200;
+}
+.menu-btn span {
+    position: absolute;
+    left: 50%;
+    width: 26px;
+    height: 2px;
+    background: #fff;
+    transform: translateX(-50%);
+    transition: .35s;
+}
+
+.menu-btn span:nth-child(1) {
+    top: 13px;
+}
+
+.menu-btn span:nth-child(2) {
+    top: 21px;
+}
+
+.menu-btn span:nth-child(3) {
+    top: 29px;
+}
+
+
+/* X */
+
+.menu-btn.active span:nth-child(1) {
+
+    top: 21px;
+    transform: translateX(-50%) rotate(45deg);
+}
+
+.menu-btn.active span:nth-child(2) {
+
+    opacity: 0;
+}
+
+.menu-btn.active span:nth-child(3) {
+
+    top: 21px;
+    transform: translateX(-50%) rotate(-45deg);
+}
+
+
+
+/* =========================
+    MOBILE MENU
+========================= */
+
+.mobile-menu {
+
+    position: fixed;
+
+    right: 0;
+    top: 0;
+
+    width: 320px;
+    max-width: 80%;
+
+    height: 100vh;
+
+    background: #111;
+
+    padding-top: 120px;
+
+    transform: translateX(100%);
+
+    transition: .45s;
+
+    z-index: 1100;
+}
+
+.mobile-menu ul {
+
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-menu li {
+
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+.mobile-menu a {
+
+    display: block;
+
+    padding: 24px 40px;
+
+    color: #fff;
+
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: .08em;
+}
+
+
+/* open */
+
+.mobile-menu.active {
+
+    transform: translateX(0);
+}
+
+
+
+/* =========================
+    OVERLAY
+========================= */
+
+.menu-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0, 0, 0, .6);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: .35s;
+
+    z-index: 1050;
+}
+
+.menu-overlay.active {
+
+    opacity: 1;
+    visibility: visible;
+}
+
+
+h1 img {
+    width:clamp(120px,7.2vw,140px);
+}
+
+nav {
+    font-family: 'MODERNIZ';
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.gnb ul {
+    display: flex;
+    gap: clamp(15px,1.5vw,30px);
+}
+
+.gnb ul li a {
+    display: block;
+    padding: 15px;
+}
+
+.h2_title {
+    font-family: 'MODERNIZ';
+    font-size: clamp(24px,4vw,60px);
+    line-height: 1.1;
+}
+/*loading*/
+.loading{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hero_intro_logo{
+    width: 30%;
+}
+/* main visual*/
+#main_visual {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'moderniz';
+    font-weight: 900;
+    overflow: hidden;
+}
+
+.hero-title,.hero-title2{
+    position:absolute;
+    text-align:center;
+}
+
+.hero-title{
+   font-size: clamp(30px,5.2vw,100px); 
+}
+.hero-title2{
+    font-size: clamp(50px,5.2vw,120px); 
+    z-index:30;
+}
+.video_mask{
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-mask: url(../images/logo_m.svg) center/contain no-repeat;
+    mask: url(../images/logo_m.svg) center/contain no-repeat;
+    -webkit-mask-size: 0% 0%;
+    mask-size: 0% 0%;
+}
+.hero-video{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    z-index: -1;
+    clip-path:url(#logoClip);
+}
+
+
+
+.scroll-indicator{
+    position:absolute;
+    bottom:60px;
+    left:50%;
+    transform:translateX(-50%);
+    opacity:0;
+}
+/* danceclass */
+#danceclass,
+#instructors {
+    position: relative;
+}
+
+.danceclass{
+    display: grid;
+    grid-template-columns: 50% 50%;
+    padding-top:var(--space-150);
+    padding-left:clamp(20px,4vw,100px);
+    padding-right:clamp(20px,4vw,100px);
+    padding-bottom:0;
+    height: 100vh;
+}
+.danceclass .h2_title{
+    padding-top: clamp(30px,5.2vw,100px);
+    padding-bottom: clamp(10px,2.0vw,20px);
+}
+p.h2_desc{
+    font-family: 'A2z';
+    text-align: center;
+    font-size:clamp(16px,2.2vw,30px);
+    padding-bottom:clamp(20px, 3.1vw,60px);
+}
+.danceclass .h2_desc{
+    text-align:left;
+}
+
+.classSwiper{
+    width: 100%;
+    padding-bottom:clamp(20px, 2.5vw,40px);
+}
+
+.classSwiper h4{
+    font-size:clamp(18px,2.2vw,30px);
+    padding:clamp(18px,2.2vw,30px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align:center;
+}
+.classSwiper h4 .class_genre{
+    font-family: 'moderniz';
+    padding-right:15px;
+    line-height: 1;
+    padding-top:6px;
+}
+.classSwiper h4 .class_name{
+    font-weight: 400;
+    line-height: 1;
+}
+.classSwiper h4 .class_name b::after{
+    content:'|';
+    font-weight: 100;
+    padding-right:10px;
+    padding-left:15px;
+    opacity: 0.3;
+    line-height: 1;
+}
+.class_card{
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    text-align: center;
+}
+.class_card video{
+    width: 80%;
+    object-fit:cover;
+    aspect-ratio: 16 / 9;
+}
+.class_card h3{
+    position: absolute;
+    font-family: 'moderniz';
+    font-size: clamp(20px, 3.1vw,60px);
+    z-index:10;
+}
+
+.class_page{
+    bottom: 0 !important;
+}
+.class_page span{
+    background-color: #fff;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.class_page .swiper-pagination-bullet-active{
+    width: 30px;
+    border-radius: 999px;
+}
+
+.class_btn{
+    padding-top:var(--space-40);
+    display:flex;
+    gap:var(--space-40);
+    justify-content: center;
+    align-items: center;
+}
+
+.class_btn li{
+    overflow:hidden;
+}
+
+/*버튼 애니메이션*/
+a.button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-decoration: none;
+  border:1px solid #fff;
+}
+
+.button__wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding:var(--space-24) var(--space-100);
+  background: #fff;
+  border:1px solid #fff;
+}
+
+.button__text {
+  position: relative;
+  z-index: 2;
+  font-family: sans-serif;
+  font-weight: 500;
+  font-size: clamp(18px,1.8vw,24px);
+  color: #111;
+  transition: 300ms ease;
+  font-family: 'A2z';
+}
+
+.button__spotlight {
+  position: absolute;
+  z-index: 1;
+  height: 10px;
+  width: 10px;
+  opacity: 1;
+  border-radius: 50%;
+  background: linear-gradient(to right, #222, #111);
+  inset: 0;
+  top: 50%;
+  transform: scale(0);
+}
+
+/* Instructors */
+#instructors {
+    position: relative;
+    overflow: hidden;
+    padding-top:var(--space-100);
+}
+#instructors .inner {
+    border-top: 1px solid var(--border-color);
+    padding-top:var(--space-50);
+    overflow: hidden;
+}
+
+.instructors .h2_title {
+    text-align: center;
+    padding-top: var(--space-100);
+    padding-bottom: clamp(10px,2.0vw,20px);
+}
+
+.instructors_list {
+    max-width: 1920px;
+    margin:0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: clamp(10px,1.5vw,30px);
+    text-align: center;
+    justify-content: center;
+    padding-top:clamp(30px,5.2vw,100px);
+    padding-left:clamp(20px, 3.1vw,60px);;
+    padding-right:clamp(20px, 3.1vw,60px);;
+}
+.instructors_photo {
+    margin-bottom: clamp(20px, 3.1vw,60px);
+    filter: grayscale();
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+.instructors_photo img{
+    width: 100%;
+}
+.logo_ani1{
+    width: 60%;
+    position:absolute;
+    bottom:20%;
+    left:-20%;
+    z-index:-1;
+    opacity: .5;
+}
+.logo_ani2{
+    width: 60%;
+    position:absolute;
+    bottom:20%;
+    z-index:-1;
+    opacity: .5;
+}
+@media (hover:hover){
+    .instructors_photo:hover{
+    filter: none;
+    scale: 1.05;
+    }
+    a.button:hover{
+        border:1px solid #444;
+    }
+    a.button:hover .button__text {
+    color: #fff;
+    }
+    .btn_submit:hover{
+         background-color: #111;
+        color:#fff;
+        border:1px solid #444;       
+    }
+}
+.instructors_name p span {
+    display: block;
+    font-size: 20px;
+    font-weight: 700px;
+    padding-bottom: 9px;
+    opacity: .7;
+}
+
+.instructors_name p b {
+    display: block;
+    font-family: 'MODERNIZ';
+    font-size: 20px;
+}
+
+
+/* Moments */
+
+.moments {
+    position: relative;
+    padding: var(--space-100) 0;
+   
+}
+.moments .inner{
+    border-top: 1px solid var(--border-color);
+    padding-left: var(--space-100);
+    padding-right: var(--space-100);
+    padding-top:var(--space-50);
+}
+.moments ul {
+    padding-top:var(--space-40);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 60px;
+}
+
+.moments_video {
+    padding-bottom: 20px;
+}
+
+.moments .h2_title {
+    text-align: center;
+    padding-top: var(--space-100);
+    padding-bottom: clamp(10px,2.0vw,20px);
+}
+
+.video_title {
+    font-weight: 600;
+    padding-bottom: 10px;
+}
+
+.video_info .video_date {
+    color: #999;
+}
+
+/* schedule */
+.schedule {
+    padding-top: 100px;
+}
+
+.schedule .inner {
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+.schedule .container{
+    position: relative;
+}
+.schedule_btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: clamp(150px,30vw,400px);
+    font-family: 'MODERNIZ';
+    font-size: clamp(36px,4.5vw,60px);
+    border-left: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+    background: url(../images/schedule_arrow.png) no-repeat 60% 50%;
+    text-align: center;
+    background-size:50% ;
+}
+.schedule .char{
+    height:1.1em;
+    line-height: 1.1em;
+}
+
+.line {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  line-height: 1;
+  margin: 0;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.line div {
+  backface-visibility: hidden;
+}
+/*text_marquee*/
+.text_marquee_box {
+    font-family: 'MODERNIZ';
+    font-size: clamp(50px,10.4vw,200px);
+    padding: clamp(80px,5.2vw,100px) 0 20px;
+    overflow: hidden;
+}
+
+.text_marquee1,
+.text_marquee2 {
+    /*이 속성은 필수*/
+    overflow: hidden;
+    line-height: 1.1;
+}
+
+.text_marquee1 {
+    display: flex;
+    width: max-content;
+    /*내용물 길이만큼 width를 정함*/
+    animation: marquee 30s linear infinite;
+}
+
+.text_marquee2 {
+    display: flex;
+    width: max-content;
+    /*내용물 길이만큼 width를 정함*/
+    animation: marquee2 30s linear infinite;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes marquee2 {
+    0% {
+        transform: translateX(-50%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+
+/* contact */
+.contact {
+    padding-top: var(--space-100);
+}
+
+.contact .inner {
+    border-top: 1px solid var(--border-color);
+}
+
+.contact .container {
+    display: flex;
+}
+
+.contact .container h2 {
+    width: clamp(100px,15vw,300px);
+    padding: clamp(50px,6.7vw,130px);
+}
+
+.contact .container form {
+    flex: 1;
+}
+
+.contact .h2_title {
+    font-size: clamp(30px,4.5vw,60px);
+    writing-mode: vertical-lr;
+}
+
+.contact_form {
+    font-size: 20px;
+    display: grid;
+    padding: clamp(20px,9.8vw,130px);
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(20px,3vw,40px);
+    border-left: 1px solid var(--border-color);
+}
+
+.contact_form input,
+.contact_form select {
+    height: 40px;
+    line-height: 40px;
+    padding: 0 15px;
+    background-color: var(--input-color);
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.field--full {
+    grid-column: 1/-1;
+}
+
+textarea {
+    min-height: 160px;
+    background-color: var(--input-color);
+}
+
+.contact_btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* instagram */
+.instagram {
+    border-top: 1px solid var(--border-color);
+    padding: var(--space-100) 0;
+}
+
+.instagram .h2_title {
+    font-size: clamp(24px,4vw,60px);
+    padding-bottom: 0px;
+    text-align: center;
+}
+
+.insta_account {
+    font-size: clamp(24px,2.3vw,36px);
+    font-weight: 300;
+    text-align: center;
+    padding-top: 20px;
+
+}
+
+.insta_box {
+    overflow: hidden;
+}
+
+.insta_marquee1 {
+    padding-top: var(--space-100);
+    overflow: hidden;
+}
+
+.insta_marquee2 {
+    margin-top: clamp(20px,2vw,40px);
+    overflow: hidden;
+}
+
+.instagram ul {
+    display: flex;
+    width: max-content;
+    gap: clamp(20px,2vw,40px);
+}
+
+.instagram ul li {
+    width: clamp(130px,19vw,260px);
+}
+
+.insta_marquee1,
+.insta_marquee2 {
+    /*이 속성은 필수*/
+    overflow: hidden;
+    line-height: 1.1;
+}
+
+.insta_marquee1 {
+    display: flex;
+    width: max-content;
+    /*내용물 길이만큼 width를 정함*/
+    animation: marquee 30s linear infinite;
+}
+
+.insta_marquee2 {
+    width: max-content;
+    /*내용물 길이만큼 width를 정함*/
+    animation: marquee2 30s linear infinite;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes marquee2 {
+    0% {
+        transform: translateX(-50%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+
+/*footer*/
+.footer {
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    padding: 50px 0;
+}
+
+.footer_sns {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    padding: 30px 0;
+}
+
+.footer_logo {
+    margin: 40px auto;
+    width: 190px;
+    opacity: 0.4;
+}
+
+.footer p {
+    color: #A4A4A4;
+    padding: 10px 0;
+}
+
+.aside_menu {
+    position: fixed;
+    bottom: 50px;
+    display: none;
+    right: 20px;
+    z-index: 100;
+}
+
+.aside_menu.active {
+    display: block;
+}
+
+.aside_menu div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--space-80);
+    height: var(--space-80);
+    border-radius: 50%;
+    background: var(--bg-color);
+    border: 1px solid #2A2A2A;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+.aside_menu div img{
+    width: 40%;
+}
+@media (max-width:1280px) {
+    /*header*/
+    .header {
+        height: 70px;
+        padding: 0 20px;
+    }
+
+    .logo-pc {
+
+        display: none;
+    }
+
+    .logo-mo {
+        display: block;
+        width: 32px;
+        height: 32px;
+    }
+
+    .gnb {
+
+        display: none;
+    }
+
+    .menu-btn {
+        display: block;
+    }
+    .h2_title {
+        font-size: 30px;
+    }
+    /*instructors*/
+    .instuctors{
+      height: auto;  
+    }
+    /*moments*/
+    .moments ul {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+    }
+    .video_title{
+        font-size:15px;
+        font-weight: normal;
+    }
+    .video_date{
+        font-size:14px;
+    }
+    /*danceclass*/
+    .danceclass{
+        grid-template-columns: 100%;
+        height: auto;
+        padding:50px;
+    }
+    .danceclass .title_box{
+        text-align: center;
+    }
+    .danceclass p.h2_desc{
+        text-align: center;
+    }
+    .class_card video{
+        width: 100%;
+        object-fit:cover;
+        aspect-ratio: 16 / 9;
+    }
+    .class_card{
+        padding-top:var(--space-100);
+        padding-bottom:var(--space-100);
+    }
+
+    .classSwiper h4 .class_genre{
+        font-family: 'moderniz';
+        padding-right:15px;
+        line-height: 1;
+        padding-top:3px;
+    }
+    .class_btn{
+        padding-top:50px;
+
+    }
+    /*instructors*/
+    .instructors_list {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+    .logo_ani1{
+        width: 50%;
+        top:10%;
+        left:-20%;
+    }
+    
+   /* contact */
+    .contact .container {
+        display: block;
+    }
+
+    .contact .container h2 {
+        width: 100%;
+        padding: 50px clamp(20px,9.8vw,130px) 0;
+    }
+
+    .contact .h2_title {
+        font-size: clamp(30px,4.5vw,60px);
+        writing-mode: unset;
+    }
+
+    .contact_form input,
+    .contact_form select {
+        height: 30px;
+        line-height: 30px;
+        padding: 0 10px;
+        background-color: var(--input-color);
+    }
+    textarea {
+        min-height: 100px;
+        background-color: var(--input-color);
+    } 
+    .btn_submit {
+        grid-column: 1 / -1;
+        justify-self: center;
+        width: 150px;
+        height: 50px;
+        font-size: 18px;
+        font-weight: 700;
+        color: #111;
+        text-align: center;
+        background: #fff;
+        margin-top: 20px;
+    }
+    .schedule_btn{
+        border-left:none;
+        border-right:none;
+    }
+}
+
+@media (max-width:768px) {
+    /*instructors*/
+    .instructors_list{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap:20px;
+        padding:20px;
+        width: auto;
+    }
+    .instructors_photo{
+        width: 100%;
+    }
+    .instructors_name p span{
+        font-size:16px;
+    }
+    .instructors_name p b{
+        font-size:16px;
+    }
+    .danceclass{
+        padding:50px 20px;
+    }
+    /*moments*/
+    .moments ul {
+        gap: 20px;
+    }
+    /*contact*/
+    .contact {
+        grid-template-columns: 1fr;
+        padding:50px 0;
+    }
+    .contact .container h2 {
+        width: 100%;
+        padding: 50px ;
+    }
+    .contact_form {
+        font-size:16px;
+        grid-template-columns: 1fr;
+        padding:30px 50px;
+        border:none;
+    }
+ 
+    /*instagram*/
+    .insta_marquee2 {
+        margin-top: 20px;
+        overflow: hidden;
+    }
+
+    .instagram ul {
+        display: flex;
+        width: max-content;
+        gap: 20px;
+    }
+    .footer {
+        padding: 20px 40px;
+        font-size:15px;
+    }
+
+    .footer_sns {
+        gap: 30px;
+        padding: 20px 0;
+    }
+    .footer_sns img{
+        width: 30px;
+    }
+    .footer_logo {
+        margin: 20px auto;
+        width: 120px;
+    }
+}
