@@ -7,52 +7,49 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
        
     //loading
-const loading_tl = gsap.timeline();
+    const loading_tl = gsap.timeline();
 
-loading_tl
-    .from(".hero_intro_logo", {
-        scale: 0,
-        opacity: 0,
-        duration: 1.2,
-        ease: "elastic.out(1, 0.5)",
-    })
-    .to({}, {
-        duration: .5
-    })
-    .to(".hero_intro_logo", {
-        opacity: 0,
-        scale: 0,
-        duration: .8,
-        ease: "elastic.in(1, 0.5)"
-    })
-    .set(".loading", {
-        display: "none"
-    })
-    .call(() => {
-        // main_visual 애니메이션 실행 전, 사용자가 이미 스크롤해서 벗어났는지 확인
-        const heroSection = document.querySelector(".main_visual");
-        const heroBottom = heroSection.getBoundingClientRect().bottom;
+    loading_tl
+        .to(".hero_intro_logo", {
+            opacity: 1,
+            scale: 1,
+            duration: 1.2,
+            ease: "elastic.out(1, 0.45)",
+        })
+        .to({}, {
+            duration: .5
+        })
+        .to(".hero_intro_logo", {
+            opacity: 0,
+            scale: 0,
+            duration: .8,
+            ease: "elastic.in(1, 0.5)"
+        })
+        .set(".loading", {
+            display: "none"
+        })
+        .call(() => {
+            const heroSection = document.querySelector(".main_visual");
+            const heroBottom = heroSection.getBoundingClientRect().bottom;
 
-        if (heroBottom <= 0 || window.scrollY > 10) {
-            // 이미 히어로 섹션을 벗어난 상태 → main_visual 애니메이션 스킵
-            gsap.set(".main_visual", { yPercent: 0 }); // 혹시 남아있을 상태 강제 정리
-            hero_tl.play();
+            if (heroBottom <= 0 || window.scrollY > 10) {
+                gsap.set(".main_visual", { yPercent: 0 });
+                hero_tl.play();
+                ScrollTrigger.refresh();
+            } else {
+                gsap.from(".main_visual", {
+                    yPercent: 100,
+                    duration: 1.2,
+                    ease: "power4.out",
+                    onComplete: () => {
+                        hero_tl.play();
+                    }
+                });
+            }
+        })
+        .call(() => {
             ScrollTrigger.refresh();
-        } else {
-            // 아직 히어로 섹션에 있는 상태 → 정상적으로 올라오는 애니메이션 실행
-            gsap.from(".main_visual", {
-                yPercent: 100,
-                duration: 1.2,
-                ease: "power4.out",
-                onComplete: () => {
-                    hero_tl.play();
-                }
-            });
-        }
-    })
-    .call(() => {
-        ScrollTrigger.refresh();
-    });
+        });
 
     //loading 끝
 
@@ -144,7 +141,7 @@ loading_tl
         y: 80,
         opacity: 0,
         stagger: 0.05,
-        duration: 0.6,
+        duration: 0.4,
         ease: "power3.out"
     })
     .from(".danceclass .h2_desc",{
@@ -152,19 +149,19 @@ loading_tl
         opacity: 0,
         duration: 0.6,
         ease: "power3.out"
-    },"-=0.3")
+    },"-=0.5")
     .from(".swiper",{
         y: 80,
         opacity: 0,
         duration: 0.6,
         ease: "power3.out"
-    })
+    },"-=0.5")
     .from(".class_btn",{
         y: 40,
         opacity: 0,
         duration: 0.4,
         ease: "power3.out"
-    },"-=0.2");
+    },"-=0.7");
 
 
  let currentTl = null;
@@ -505,20 +502,20 @@ loading_tl
         y: 80,
         opacity: 0,
         stagger: 0.05,
-        duration: 0.8,
+        duration: 0.5,
         ease: "power3.out"
     })
     .from(".moments .h2_desc",{
         y: 50,
         opacity: 0,
-        duration: 0.6,
+        duration: 0.4,
         ease: "power3.out"
     },"-=0.3")
     .from(".moments_list li",{
         y:100,
         opacity:0,
-        stagger:0.15
-    })
+        stagger:0.1
+    },"-=0.8")
     .from(".logo_ani2",{
         opacity:0,
     });
@@ -598,19 +595,19 @@ schedule_link.addEventListener("mouseleave", () => {
     const contact_tl = gsap.timeline({
         scrollTrigger: {
             trigger: ".contact",
-            start: "top 40%",
+            start: "top 60%",
         }
     });
     contact_tl.from(".contact .h2_title",{
         y:50,
         opacity:0,
-        duration:0.6,
+        duration:0.4,
         ease:"power3.out",
     })
     .from(".contact_form",{
         y:50,
         opacity:0,
-        duration:0.8,
+        duration:0.4,
         ease:"power3.out",    
     },"-=0.2");
 
@@ -631,9 +628,9 @@ schedule_link.addEventListener("mouseleave", () => {
         y: 80,
         opacity: 0,
         stagger: 0.05,
-        duration: 0.6,
+        duration: 0.4,
         ease: "power3.out"
-    })
+    },"-=0.2")
    .from(".insta_account",{
         y:40,
         opacity:0,
