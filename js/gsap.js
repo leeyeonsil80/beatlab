@@ -274,7 +274,6 @@ loading_tl
                 start: "top 100px",
                 pin:true,
                 scrub:1,
-                markers:true
             }
         });
 
