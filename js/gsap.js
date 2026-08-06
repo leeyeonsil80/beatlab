@@ -1,120 +1,60 @@
 // use a script tag or an external JS file
+
+let playMenuReveal = () => {}; // 기본값은 빈 함수 (PC 등 조건 미매치 시 안전하게)
 document.addEventListener("DOMContentLoaded", (event) => {
     // gsap code here! 
     gsap.registerPlugin(ScrollTrigger);
 
-    //로고 바운스
-    const logo = document.querySelector("h1");
-    logo.addEventListener("mouseenter", () => {
-    gsap.fromTo(logo,
-        {
-        scale: 1.2
-        },
-        {
-        scale: 1,
-        duration: 0.7,
-        ease: "elastic.out(1, 0.35)"
-        }
-    );
-    });
-
-    //menu Rolling
-    document.querySelectorAll(".rolling-text").forEach(text => {
-
-        const letters = [...text.textContent];
-        text.innerHTML = "";
-
-        letters.forEach(letter => {
-
-            if(letter === " "){
-                text.insertAdjacentHTML(
-                    "beforeend",
-                    `<span class="char space"></span>`
-                );
-                return;
-            }
-
-            text.insertAdjacentHTML(
-                "beforeend",
-                `
-                <span class="char">
-                    <span class="char-inner">
-                        <span>${letter}</span>
-                        <span>${letter}</span>
-                    </span>
-                </span>
-                `
-            );
-        });
-
-        const chars = text.querySelectorAll(".char-inner");
-
-        let animating = false;
-
-        text.parentElement.addEventListener("mouseenter", () => {
-
-            if(animating) return;
-            animating = true;
-
-            gsap.to(chars,{
-                yPercent:-50,
-                stagger:0.025,
-                duration:0.45,
-                ease:"power3.out",
-                onComplete(){
-
-                    chars.forEach(char=>{
-
-                        // 첫 번째와 두 번째 글자 교체
-                        char.appendChild(char.firstElementChild);
-
-                        // 위치 초기화
-                        gsap.set(char,{
-                            yPercent:0
-                        });
-
-                    });
-
-                    animating = false;
-                }
-            });
-
-        });
-
-    });
+       
     //loading
-    const loading_tl = gsap.timeline();
-    loading_tl.from(".hero_intro_logo",{
+const loading_tl = gsap.timeline();
+
+loading_tl
+    .from(".hero_intro_logo", {
         scale: 0,
         opacity: 0,
         duration: 1.2,
         ease: "elastic.out(1, 0.5)",
-            
     })
-    .to({},{
-            duration:.5
-        })
-        .to(".hero_intro_logo",{
-            opacity:0,
-            scale:0,
-            duration:.8,
-            ease: "elastic.in(1, 0.5)"
+    .to({}, {
+        duration: .5
+    })
+    .to(".hero_intro_logo", {
+        opacity: 0,
+        scale: 0,
+        duration: .8,
+        ease: "elastic.in(1, 0.5)"
     })
     .set(".loading", {
         display: "none"
     })
-    .from(".main_visual", {
-        yPercent: 100,
-        duration: 1.2,
-        ease: "power4.out",
-        onComplete: () => {
-        hero_tl.play();
+    .call(() => {
+        // main_visual 애니메이션 실행 전, 사용자가 이미 스크롤해서 벗어났는지 확인
+        const heroSection = document.querySelector(".main_visual");
+        const heroBottom = heroSection.getBoundingClientRect().bottom;
+
+        if (heroBottom <= 0 || window.scrollY > 10) {
+            // 이미 히어로 섹션을 벗어난 상태 → main_visual 애니메이션 스킵
+            gsap.set(".main_visual", { yPercent: 0 }); // 혹시 남아있을 상태 강제 정리
+            hero_tl.play();
+            ScrollTrigger.refresh();
+        } else {
+            // 아직 히어로 섹션에 있는 상태 → 정상적으로 올라오는 애니메이션 실행
+            gsap.from(".main_visual", {
+                yPercent: 100,
+                duration: 1.2,
+                ease: "power4.out",
+                onComplete: () => {
+                    hero_tl.play();
+                }
+            });
         }
     })
     .call(() => {
         ScrollTrigger.refresh();
-        hero_tl.play();
     });
+
+    //loading 끝
 
     //main_visual
 
@@ -225,224 +165,284 @@ document.addEventListener("DOMContentLoaded", (event) => {
         duration: 0.4,
         ease: "power3.out"
     },"-=0.2");
-    
-    //버튼 애니메이션
 
-const buttons = document.querySelectorAll(".button");
 
-buttons.forEach(button => {
+ let currentTl = null;
 
-    const spotlight = button.querySelector(".button__spotlight");
+    function resetSlide(slideEl) {
+        const video = slideEl.querySelector('.class_card video');
+        const titleSpan = slideEl.querySelector('.class_card h3 span');
+        const info = slideEl.querySelector('.class_name');
 
-    button.addEventListener("mousemove", (e) => {
+        if (video) gsap.set(video, { scale: 1 });
+        if (titleSpan) gsap.set(titleSpan, { y: '120%', scale: 0.5, opacity: 0 });
+        if (info) gsap.set(info, { x:20, opacity: 0 });
+    }
 
-        const rect = button.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+    function animateSlideIn(slideEl) {
+        if (!slideEl) return;
 
-        gsap.to(spotlight, {
-            x: x,
-            y: y,
-            scale: 40,
-            duration: 0.3,
-            ease: "power2.out"
+        const video = slideEl.querySelector('.class_card video');
+        const titleSpan = slideEl.querySelector('.class_card h3 span');
+        const info = slideEl.querySelector('.class_name');
+
+        if (!video || !titleSpan || !info) return;
+
+        if (currentTl) currentTl.kill();
+
+        currentTl = gsap.timeline();
+
+        currentTl.to(video, {
+            scale: 1,
+            duration: 1.6,
+            ease: 'power2.out',
+        }, 0)
+        .to(titleSpan, {
+            y: 0,
+            scale: 1,
+            opacity: 1,
+            duration: 0.5,
+            ease: 'back.out(1.4)',
+        }, 0.15)
+        .to(info, {
+            x:0,
+            opacity: 1,
+            duration: 0.7,
+            ease: 'power1.out',
+        }, 0.65);
+    }
+
+    function handleSlideChange(swiperInstance) {
+        swiperInstance.slides.forEach((slideEl, index) => {
+            if (index === swiperInstance.activeIndex) {
+                animateSlideIn(slideEl);
+            } else {
+                resetSlide(slideEl);
+            }
         });
+    }
 
-    });
+    const swiper = new Swiper('.classSwiper', {
+        effect: 'cube',
+        cubeEffect: {
+            shadow: false, // 그림자 제거
+            slideShadows: false, // 옆면 음영은 유지 (입체감은 살림)
+        },
+        grabCursor: true,
 
-    button.addEventListener("mouseleave", (e) => {
+        loop: true,
 
-        const rect = button.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        gsap.to(spotlight, {
-            x: x,
-            y: y,
-            scale: 0,
-            duration: 0.3,
-            ease: "power2.out"
-        });
-
-    });
-
-});
-
-    
-    /*
-const classtitles = [];
-
-document.querySelectorAll(".class_card h3").forEach(title => {
-
-    classtitles.push(
-        new SplitType(title, {
-            types: "chars"
-        })
-    );
-
-});
-classtitles.forEach(split => {
-
-    gsap.set(split.chars, {
-
-        y: 60,
-        opacity: 0,
-        rotateX: -90,
-        transformOrigin: "50% 100%"
-
-    });
-
-});
-function animateTitle(index){
-
-    const chars = classtitles[index].chars;
-
-    gsap.fromTo(chars,
-
-        {
-            y:60,
-            opacity:0,
-            rotateX:-90
+        pagination: {
+            el: '.class_page',
+            clickable: true,
         },
 
-        {
-            y:0,
-            opacity:1,
-            rotateX:0,
-
-            stagger:.03,
-
-            duration:.6,
-
-            ease:"power3.out"
-
-        }
-
-    );
-
-}
-function hideTitle(index){
-
-    const chars = classtitles[index].chars;
-
-    gsap.to(chars,{
-
-        y:-40,
-
-        opacity:0,
-
-        stagger:.02,
-
-        duration:.25,
-
-        ease:"power2.in"
-
-    });
-
-}
-animateTitle(0);
-
-swiper.on("slideChangeTransitionStart",()=>{
-
-    hideTitle(swiper.previousIndex);
-
-});
-
-swiper.on("slideChangeTransitionEnd",()=>{
-
-    animateTitle(swiper.activeIndex);
-
-});
-swiper.on("slideChangeTransitionEnd",()=>{
-
-    const activeVideo = swiper.slides[swiper.activeIndex].querySelector("video");
-
-    gsap.fromTo(activeVideo,
-
-        {
-            scale:1.3
+        autoplay: {
+            delay: 2500,
+            disableOnInteraction: false,
         },
 
-        {
-            scale:1,
+        speed: 700, // 큐브 회전은 느긋한 속도가 자연스러움
 
-            duration:1.2,
+        on: {
+            init: function () {
+                handleSlideChange(this);
+            },
+            slideChangeTransitionEnd: function () {
+                handleSlideChange(this);
+            },
+            loopFix: function () {
+                handleSlideChange(this);
+            },
+        },
+    });
 
-            ease:"power3.out"
-
-        }
-
-    );
-
-});
-*/
-    //instructors
 
      //instructors 텍스트 분리
     const instructors_split = new SplitType(".instructors .h2_title", {
     types: "chars"
     });
     
-   const instructors_tl = gsap.timeline(
-        {
-            scrollTrigger: {
-            trigger: ".instructors",
-            start:"top 30%",
-           }
-         }
-    );
-    instructors_tl.from(instructors_split.chars,{
-        y: 80,
-        opacity: 0,
-        stagger: 0.05,
-        duration: 0.6,
-        ease: "power3.out"
-    })
-  .from(".instructors .h2_desc",{
-        y: 50,
-        opacity: 0,
-        duration: 0.6,
-        ease: "power3.out"
-    },"-=0.3");
-
-    
-    //PC 가로 스크롤
+        
     const ins_mm = gsap.matchMedia();
-    // 강사 리스트 가로 스크롤
     const ins_list = document.querySelector(".instructors_list");
     ins_mm.add("(min-width: 769px)", () => {
-        instructors_tl.from(".instructors_list li",{
-            x: 100,
-            opacity: 0,
-            duration: 0.7,
-            stagger: 0.1,  
-        })
-        .from(".logo_ani1",{
-        opacity: 0,
-        duration: 0.6,
-        ease: "power3.out"
+         // 이 안의 코드는 뷰포트 너비가 769px 이상일 때만 실행됩니다.
+    const tl_pc = gsap.timeline({
+            scrollTrigger: {
+                trigger: ".instructors",
+                start: "top 100px",
+                pin:true,
+                scrub:1,
+                markers:true
+            }
         });
-    
-});
-    ins_mm.add("(max-width: 768px)", () => {
+
+         tl_pc
+        .from(instructors_split.chars,{
+            y: 80,
+            opacity: 0,
+            stagger: 0.05,
+            duration: 0.6,
+            ease: "power3.out"
+        })
+       .from(".instructors .h2_desc",{
+            y: 50,
+            opacity: 0,
+            duration: 0.6,
+            ease: "power3.out"
+        },"-=0.3")
+        .to(".instructors_list li .instructors_photo img", {
+            y: '0%',
+            rotate: 0,
+            scale: 1,
+            duration: 1.1,
+            stagger: 0.1,
+            ease: 'back.out(1.6)',
+        })
+        .to(".instructors_name", {
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            stagger: 0.05,
+            ease: 'power2.out',
+        }, "-=0.6")
+        .from(".logo_ani1", {
+            opacity: 0,
+            duration: 0.6,
+            ease: "power3.out"
+        });
+
+
+    return () => {
+            tl_pc.scrollTrigger && tl_pc.scrollTrigger.kill();
+            tl_pc.kill();
+
+            // PC 애니메이션이 남긴 인라인 스타일 완전히 제거
+            gsap.set(".instructors_list li .instructors_photo img", {
+                clearProps: "transform,opacity"
+            });
+            gsap.set(".instructors_name", {
+                clearProps: "transform,opacity"
+            });
+            gsap.set(instructors_split.chars, {
+                clearProps: "transform,opacity"
+            });
+            gsap.set(".instructors .h2_desc", {
+                clearProps: "transform,opacity"
+            });
+            gsap.set(".logo_ani1", {
+                clearProps: "opacity"
+            });
+        };
+    });
+     ins_mm.add("(max-width: 768px)", () => {
 
         // ==========================
         // Mobile / Tablet
         // ==========================
 
-        instructors_tl.from(".instructors_list li",{
+    // 혹시 모를 잔여 인라인 스타일 정리 후 시작
+        gsap.set(".instructors_list li .instructors_photo img", {
+            clearProps: "transform,opacity"
+        });
+        const tl_mobile = gsap.timeline({
+            scrollTrigger: {
+                trigger: ".instructors",
+                start: "top 30%",
+            }
+        });
+        tl_mobile.from(".instructors_list li",{
             y: 60,
             opacity: 0,
             duration: 0.7,
             stagger: 0.1,  
         })
+        .to(".instructors_name", {
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            stagger: 0.05,
+            ease: 'power2.out',
+        }, "-=0.6")
         .from(".logo_ani1",{
         opacity: 0,
         duration: 0.6,
         ease: "power3.out"
-        });
+        })
+        ;
+
+        return () => {
+            tl_mobile.scrollTrigger && tl_mobile.scrollTrigger.kill();
+        };
 
     });
+    ins_mm.add("(max-width: 1280px)", () => {
+        const mobileMenu_tl = gsap.timeline();
+        // 이 브레이크포인트에서 실행할 리빌 함수 정의
+        playMenuReveal = () => {
+           mobileMenu_tl.from(".mobile_menu_logo",{
+                opacity:0,
+                y:40,
+                duration: 0.4,
+           })
+           .to(menuLinks, {
+                y:0,
+                opacity: 1,
+                duration: 1,
+                stagger: 0.18,
+                ease: 'power3.out',
+            });
+        };
+
+        // cleanup: 브레이크포인트를 벗어나면 다시 빈 함수로 초기화
+        return () => {
+            playMenuReveal = () => {};
+            gsap.set(menuLinks, { y: '100%', opacity: 0 }); // 상태도 리셋
+        };
+    });
+  
+    const menuPanel = document.querySelector('.mobile-menu');       // 패널
+    const menuLinks = document.querySelectorAll('.mobile-menu ul li a'); // 텍스트 (a 태그들)
+    menuLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            window.closeMenu(); 
+            // closeMenu(); // 같은 파일 안에 있다면 window 없이 호출
+        });
+    });
+    // 초기 상태: 항상 숨겨둠
+    gsap.set(menuLinks, { y: '100%', opacity: 0 });
+
+
+
+    // openMenu, closeMenu 모두 같은 스코프 안으로 이동
+    window.openMenu = function () {
+
+        menuBtn.classList.add("active");
+        mobileMenu.classList.add("active");
+        overlay.classList.add("active");
+
+        document.body.style.overflow = "hidden";
+
+        playMenuReveal(); // 지역 변수라 그냥 호출 가능
+    };
+
+    window.closeMenu = function () {
+
+        menuBtn.classList.remove("active");
+        mobileMenu.classList.remove("active");
+        overlay.classList.remove("active");
+
+        document.body.style.overflow = "";
+
+        gsap.to(menuLinks, {
+            y: '100%',
+            opacity: 0,
+            duration: 0.4,
+            stagger: 0.05,
+            ease: 'power2.in',
+        });
+    };
 
     // 헤더 배경 지정
     ScrollTrigger.create({
@@ -519,6 +519,9 @@ swiper.on("slideChangeTransitionEnd",()=>{
         y:100,
         opacity:0,
         stagger:0.15
+    })
+    .from(".logo_ani2",{
+        opacity:0,
     });
     //schedule
 const sche_container = document.querySelector(".schedule_box");
@@ -617,7 +620,7 @@ schedule_link.addEventListener("mouseleave", () => {
     const instagram_tl= gsap.timeline({
         scrollTrigger: {
             trigger: ".instagram",
-            start: "top 40%"
+            start: "top 60%"
         }
     });
      //instagram 텍스트 분리
@@ -677,4 +680,159 @@ schedule_link.addEventListener("mouseleave", () => {
         ease: "power3.out"            
     },"-=0.1");
     ScrollTrigger.refresh();
+
+    const mm = gsap.matchMedia();
+
+    mm.add("(hover: hover)", () => {
+    // 마우스가 있는 기기(PC)에서만 실행
+    //로고 바운스
+    const logo = document.querySelector("h1");
+    logo.addEventListener("mouseenter", () => {
+    gsap.fromTo(logo,
+        {
+        scale: 1.2
+        },
+        {
+        scale: 1,
+        duration: 0.7,
+        ease: "elastic.out(1, 0.35)"
+        }
+    );
+    });
+    //로고 바운스 끝
+
+    //menu Rolling
+    document.querySelectorAll(".rolling-text").forEach(text => {
+
+        const letters = [...text.textContent];
+        text.innerHTML = "";
+
+        letters.forEach(letter => {
+
+            if(letter === " "){
+                text.insertAdjacentHTML(
+                    "beforeend",
+                    `<span class="char space"></span>`
+                );
+                return;
+            }
+
+            text.insertAdjacentHTML(
+                "beforeend",
+                `
+                <span class="char">
+                    <span class="char-inner">
+                        <span>${letter}</span>
+                        <span>${letter}</span>
+                    </span>
+                </span>
+                `
+            );
+        });
+
+        const chars = text.querySelectorAll(".char-inner");
+
+        let animating = false;
+
+        text.parentElement.addEventListener("mouseenter", () => {
+
+            if(animating) return;
+            animating = true;
+
+            gsap.to(chars,{
+                yPercent:-50,
+                stagger:0.025,
+                duration:0.45,
+                ease:"power3.out",
+                onComplete(){
+
+                    chars.forEach(char=>{
+
+                        // 첫 번째와 두 번째 글자 교체
+                        char.appendChild(char.firstElementChild);
+
+                        // 위치 초기화
+                        gsap.set(char,{
+                            yPercent:0
+                        });
+
+                    });
+
+                    animating = false;
+                }
+            });
+
+        });
+
+    });
+    //menu Rolling 끝
+    //버튼 애니메이션
+
+    const buttons = document.querySelectorAll(".button");
+
+    buttons.forEach(button => {
+
+        const spotlight = button.querySelector(".button__spotlight");
+
+        button.addEventListener("mousemove", (e) => {
+
+            const rect = button.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            gsap.to(spotlight, {
+                x: x,
+                y: y,
+                scale: 40,
+                duration: 0.3,
+                ease: "power2.out"
+            });
+
+        });
+
+        button.addEventListener("mouseleave", (e) => {
+
+            const rect = button.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            gsap.to(spotlight, {
+                x: x,
+                y: y,
+                scale: 0,
+                duration: 0.3,
+                ease: "power2.out"
+            });
+
+        });
+
+    });
+    //버튼 애니메이션 끝
+    const asideBtns = document.querySelectorAll('.aside_menu .chatbot img, .aside_menu .btn_top img');
+
+        asideBtns.forEach(btn => {
+
+            btn.addEventListener('mouseenter', () => {
+                gsap.timeline()
+                    .to(btn, {
+                        scale: 0.85,
+                        opacity:.7,
+                        duration: 0.15,
+                        ease: 'power2.out',
+                    })
+                    .to(btn, {
+                        scale: 1,
+                        duration: 0.5,
+                        opacity:1,
+                        ease: 'elastic.out(1, 0.4)', // 탄성 바운스
+                    });
+            });
+
+        });
+   
+    
+    //여기까지 
+    });
+
+
 });

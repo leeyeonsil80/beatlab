@@ -105,7 +105,7 @@ body {
     padding: 0 clamp(40px,4vw,80px);
     background:transparent;
     transition:.35s;
-    z-index: 1001;
+    z-index: 5000;
 }
 .header.is-dark{
     background:rgba(26,26,26,.85);
@@ -228,49 +228,49 @@ body {
 ========================= */
 
 .mobile-menu {
-
     position: fixed;
-
+    top:0;
     right: 0;
-    top: 0;
-
-    width: 320px;
-    max-width: 80%;
-
-    height: 100vh;
-
-    background: #111;
-
+    width: 100%;
+    max-width: 100%;
+    height:100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: rgba(26,26,26,.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     padding-top: 120px;
-
-    transform: translateX(100%);
-
     transition: .45s;
-
+    opacity: 0;
+    visibility: hidden;
     z-index: 1100;
+    padding-bottom:150px;
 }
 
 .mobile-menu ul {
-
     display: flex;
     flex-direction: column;
 }
-
+.mobile_menu_logo{
+    margin:0 auto;
+    max-width: 50px;
+    width: 15%;
+    padding-bottom:40px;
+}
 .mobile-menu li {
-
-    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    overflow: hidden;
+    text-align: center;
 }
 
 .mobile-menu a {
-
     display: block;
-
     padding: 24px 40px;
-
     color: #fff;
-
+    transform: translateY(0);
     font-size: 18px;
     font-weight: 600;
+    line-height: 1;
     letter-spacing: .08em;
 }
 
@@ -278,8 +278,8 @@ body {
 /* open */
 
 .mobile-menu.active {
-
-    transform: translateX(0);
+    visibility: visible;
+    opacity: 1;
 }
 
 
@@ -289,23 +289,17 @@ body {
 ========================= */
 
 .menu-overlay {
-
     position: fixed;
-
-    inset: 0;
-
-    background: rgba(0, 0, 0, .6);
-
+    width: 100%;
+    height: 100vh;
+    inset:0;
     opacity: 0;
     visibility: hidden;
-
     transition: .35s;
-
     z-index: 1050;
 }
 
 .menu-overlay.active {
-
     opacity: 1;
     visibility: visible;
 }
@@ -333,7 +327,7 @@ nav {
 
 .h2_title {
     font-family: 'MODERNIZ';
-    font-size: clamp(24px,4vw,60px);
+    font-size: clamp(20px,4vw,60px);
     line-height: 1.1;
 }
 /*loading*/
@@ -365,10 +359,10 @@ nav {
 }
 
 .hero-title{
-   font-size: clamp(30px,5.2vw,100px); 
+   font-size: clamp(24px,4.8vw,100px); 
 }
 .hero-title2{
-    font-size: clamp(50px,5.2vw,120px); 
+    font-size: clamp(36px,5vw,120px); 
     z-index:30;
 }
 .video_mask{
@@ -390,8 +384,12 @@ nav {
     clip-path:url(#logoClip);
 }
 
-
-
+section{
+  scroll-margin-top: 100px;
+}
+section.danceclass{
+  scroll-margin-top: 0px;
+}
 .scroll-indicator{
     position:absolute;
     bottom:60px;
@@ -406,13 +404,15 @@ nav {
 }
 
 .danceclass{
-    display: grid;
-    grid-template-columns: 50% 50%;
-    padding-top:var(--space-150);
-    padding-left:clamp(20px,4vw,100px);
-    padding-right:clamp(20px,4vw,100px);
-    padding-bottom:0;
-    height: 100vh;
+    max-width: 1320px;
+    margin:0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align:center;
+    min-height: 100vh;
+    padding-top:var(--space-100);
+    padding-bottom:var(--space-100);
 }
 .danceclass .h2_title{
     padding-top: clamp(30px,5.2vw,100px);
@@ -424,12 +424,8 @@ p.h2_desc{
     font-size:clamp(16px,2.2vw,30px);
     padding-bottom:clamp(20px, 3.1vw,60px);
 }
-.danceclass .h2_desc{
-    text-align:left;
-}
-
 .classSwiper{
-    width: 100%;
+    width: 60%;
     padding-bottom:clamp(20px, 2.5vw,40px);
 }
 
@@ -450,6 +446,8 @@ p.h2_desc{
 .classSwiper h4 .class_name{
     font-weight: 400;
     line-height: 1;
+    transform: translateX(30px); /* y 대신 x */
+    opacity: 0;
 }
 .classSwiper h4 .class_name b::after{
     content:'|';
@@ -469,16 +467,28 @@ p.h2_desc{
     text-align: center;
 }
 .class_card video{
-    width: 80%;
-    object-fit:cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    will-change: transform;
     aspect-ratio: 16 / 9;
 }
-.class_card h3{
+.class_card h3 {
     position: absolute;
     font-family: 'moderniz';
     font-size: clamp(20px, 3.1vw,60px);
     z-index:10;
+    overflow: hidden; /* 텍스트 마스킹 핵심 */
+    margin: 0;
 }
+
+.class_card h3 span {
+    display: inline-block;
+    will-change: transform;
+    opacity: 0;
+}
+
 
 .class_page{
     bottom: 0 !important;
@@ -552,35 +562,36 @@ a.button {
 
 /* Instructors */
 #instructors {
-    position: relative;
-    overflow: hidden;
-    padding-top:var(--space-100);
-}
-#instructors .inner {
+    width: 100%;
     border-top: 1px solid var(--border-color);
-    padding-top:var(--space-50);
+    padding-top:var(--space-100);
+    padding-bottom:var(--space-100);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: calc(100vh - 100px);
     overflow: hidden;
 }
-
 .instructors .h2_title {
     text-align: center;
-    padding-top: var(--space-100);
     padding-bottom: clamp(10px,2.0vw,20px);
 }
 
 .instructors_list {
-    max-width: 1920px;
+    max-width: 1320px;
     margin:0 auto;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     gap: clamp(10px,1.5vw,30px);
     text-align: center;
     justify-content: center;
-    padding-top:clamp(30px,5.2vw,100px);
+    padding-top:var(--space-50);
     padding-left:clamp(20px, 3.1vw,60px);;
     padding-right:clamp(20px, 3.1vw,60px);;
 }
 .instructors_photo {
+    position: relative;
     margin-bottom: clamp(20px, 3.1vw,60px);
     filter: grayscale();
     cursor: pointer;
@@ -588,8 +599,32 @@ a.button {
     transition: all 0.3s;
 }
 .instructors_photo img{
+    display: block;
     width: 100%;
+    will-change: transform;
 }
+
+/* PC 전용: 마스킹 초기 상태 */
+
+@media (min-width: 769px) {
+    .instructors_photo img {
+        transform: translateY(100%) scale(0.8);
+        transform-origin: center center;
+    }
+
+    .instructors_name {
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(15px);
+    }
+}
+
+.instructors_name{
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(15px);
+}
+
 .logo_ani1{
     width: 60%;
     position:absolute;
@@ -599,11 +634,16 @@ a.button {
     opacity: .5;
 }
 .logo_ani2{
-    width: 60%;
+    width: 90%;
     position:absolute;
-    bottom:20%;
+    right:-50%;
+    bottom:-10%;
     z-index:-1;
     opacity: .5;
+}
+.footer_sns a img {
+    transition: all 0.3s;
+    opacity: 0.5;
 }
 @media (hover:hover){
     .instructors_photo:hover{
@@ -620,6 +660,9 @@ a.button {
          background-color: #111;
         color:#fff;
         border:1px solid #444;       
+    }
+    .footer_sns li img:hover{
+        opacity: 1; /* 밝기 2배 */
     }
 }
 .instructors_name p span {
@@ -640,15 +683,11 @@ a.button {
 /* Moments */
 
 .moments {
+    width: 100%;
     position: relative;
-    padding: var(--space-100) 0;
-   
-}
-.moments .inner{
     border-top: 1px solid var(--border-color);
-    padding-left: var(--space-100);
-    padding-right: var(--space-100);
-    padding-top:var(--space-50);
+    padding: var(--space-100) var(--space-50);
+    overflow: hidden;
 }
 .moments ul {
     padding-top:var(--space-40);
@@ -664,7 +703,6 @@ a.button {
 
 .moments .h2_title {
     text-align: center;
-    padding-top: var(--space-100);
     padding-bottom: clamp(10px,2.0vw,20px);
 }
 
@@ -672,20 +710,19 @@ a.button {
     font-weight: 600;
     padding-bottom: 10px;
 }
-
+.video_info{
+    overflow: hidden;
+}
 .video_info .video_date {
     color: #999;
 }
 
 /* schedule */
 .schedule {
-    padding-top: 100px;
-}
-
-.schedule .inner {
     border-top: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color);
 }
+
 .schedule .container{
     position: relative;
 }
@@ -726,7 +763,7 @@ a.button {
 .text_marquee_box {
     font-family: 'MODERNIZ';
     font-size: clamp(50px,10.4vw,200px);
-    padding: clamp(80px,5.2vw,100px) 0 20px;
+    padding: clamp(80px,5.2vw,100px) 0 clamp(80px,5.2vw,100px);
     overflow: hidden;
 }
 
@@ -774,11 +811,8 @@ a.button {
 
 /* contact */
 .contact {
-    padding-top: var(--space-100);
-}
-
-.contact .inner {
     border-top: 1px solid var(--border-color);
+
 }
 
 .contact .container {
@@ -963,11 +997,11 @@ textarea {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: var(--space-80);
-    height: var(--space-80);
+    width: clamp(50px,6vw,80px);
+    height: clamp(50px,6vw,80px);
     border-radius: 50%;
     background: var(--bg-color);
-    border: 1px solid #2A2A2A;
+    border: 1px solid #333;
     margin-bottom: 15px;
     cursor: pointer;
 }
@@ -980,7 +1014,12 @@ textarea {
         height: 70px;
         padding: 0 20px;
     }
-
+    section{
+        scroll-margin-top: 70px;
+    }
+    section .danceclass{
+        scroll-margin-top: 0;
+    }
     .logo-pc {
 
         display: none;
@@ -990,13 +1029,18 @@ textarea {
         display: block;
         width: 32px;
         height: 32px;
+        z-index: 2000;
     }
 
     .gnb {
 
         display: none;
     }
-
+    .header.is-dark{
+        background:rgba(26, 26, 26, 1);
+        color:#fff;
+        backdrop-filter:none;
+    }
     .menu-btn {
         display: block;
     }
@@ -1015,16 +1059,24 @@ textarea {
     }
     .video_title{
         font-size:15px;
+        line-height: 21px;
         font-weight: normal;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        max-height: 42px;
     }
     .video_date{
         font-size:14px;
     }
     /*danceclass*/
     .danceclass{
-        grid-template-columns: 100%;
         height: auto;
-        padding:50px;
+        min-height: initial;
+    }
+    .danceclass .container{
+        max-width: 100%;
     }
     .danceclass .title_box{
         text-align: center;
@@ -1032,8 +1084,10 @@ textarea {
     .danceclass p.h2_desc{
         text-align: center;
     }
+    .classSwiper{
+        width: 95%;
+    }
     .class_card video{
-        width: 100%;
         object-fit:cover;
         aspect-ratio: 16 / 9;
     }
@@ -1057,9 +1111,9 @@ textarea {
         grid-template-columns: 1fr 1fr 1fr;
     }
     .logo_ani1{
-        width: 50%;
-        top:10%;
-        left:-20%;
+        width: 90%;
+        top:0%;
+        left:-40%;
     }
     
    /* contact */
@@ -1067,10 +1121,6 @@ textarea {
         display: block;
     }
 
-    .contact .container h2 {
-        width: 100%;
-        padding: 50px clamp(20px,9.8vw,130px) 0;
-    }
 
     .contact .h2_title {
         font-size: clamp(30px,4.5vw,60px);
@@ -1087,7 +1137,10 @@ textarea {
     textarea {
         min-height: 100px;
         background-color: var(--input-color);
-    } 
+    }
+    .contact_btn{
+        padding-top:30px;
+    }
     .btn_submit {
         grid-column: 1 / -1;
         justify-self: center;
@@ -1107,16 +1160,39 @@ textarea {
 }
 
 @media (max-width:768px) {
+    section{
+    scroll-margin-top: 70px;
+    }
+    .h2_title{
+        font-size:20px;
+    }
+    .hero-title{
+    font-size: 24px; 
+    }
+    .hero-title2{
+        font-size:30px; 
+        z-index:30;
+    }
+
+    /*class*/
+    .danceclass{
+        padding:50px 20px;
+    }
+    .class_card{
+        padding-top:20px;
+        padding-bottom:10px;
+    }
     /*instructors*/
     .instructors_list{
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
         gap:20px;
         padding:20px;
         width: auto;
     }
     .instructors_photo{
-        width: 100%;
+        width: 50%;
+        margin:15px auto;
     }
     .instructors_name p span{
         font-size:16px;
@@ -1124,17 +1200,19 @@ textarea {
     .instructors_name p b{
         font-size:16px;
     }
-    .danceclass{
-        padding:50px 20px;
-    }
+
     /*moments*/
+    .moments{
+        padding-left:16px;
+        padding-right:16px;
+    }
     .moments ul {
         gap: 20px;
     }
     /*contact*/
     .contact {
         grid-template-columns: 1fr;
-        padding:50px 0;
+        padding:30px 0;
     }
     .contact .container h2 {
         width: 100%;
@@ -1146,7 +1224,7 @@ textarea {
         padding:30px 50px;
         border:none;
     }
- 
+
     /*instagram*/
     .insta_marquee2 {
         margin-top: 20px;
@@ -1173,5 +1251,8 @@ textarea {
     .footer_logo {
         margin: 20px auto;
         width: 120px;
+    }
+    .aside_menu{
+        bottom:100px;
     }
 }
