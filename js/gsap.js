@@ -119,7 +119,40 @@ document.addEventListener("DOMContentLoaded", (event) => {
         duration: 0.3,
         ease: "power2.inOut"
     })
+    // ▼ 여기부터 추가
+    .to(".scroll-indicator", {
+        opacity: 1,
+        duration: 0.8,
+        ease: "power2.out",
+        onComplete: () => {
+            gsap.to(".scroll-indicator", {
+                y: 8,
+                duration: 0.8,
+                repeat: -1,
+                yoyo: true,
+                ease: "power1.inOut",
+            });
+        }
+    });
 
+    // scroll-indicator 클릭 시 danceclass 섹션으로 이동
+    document.querySelector('.scroll-indicator').addEventListener('click', () => {
+        const target = document.querySelector('.danceclass');
+        const offset = 0; // 헤더 높이만큼
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+    });
+
+    // 스크롤 시작하면 scroll-indicator 자연스럽게 사라짐
+    gsap.to(".scroll-indicator", {
+        opacity: 0,
+        scrollTrigger: {
+            trigger: ".main_visual",
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+        }
+    });
 
     //danceclass
 
@@ -172,7 +205,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         const info = slideEl.querySelector('.class_name');
 
         if (video) gsap.set(video, { scale: 1 });
-        if (titleSpan) gsap.set(titleSpan, { y: '120%', scale: 0.5, opacity: 0 });
+        if (titleSpan) gsap.set(titleSpan, { y: '120%', scale: 1, opacity: 0 });
         if (info) gsap.set(info, { x:20, opacity: 0 });
     }
 
@@ -198,15 +231,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
             y: 0,
             scale: 1,
             opacity: 1,
-            duration: 0.5,
-            ease: 'back.out(1.4)',
-        }, 0.15)
+            duration: 0.6,
+            ease: 'back.out(0.8)'
+        }, 0.05)
         .to(info, {
             x:0,
             opacity: 1,
-            duration: 0.7,
-            ease: 'power1.out',
-        }, 0.65);
+            duration: 0.2,
+            ease: 'ease.out',
+        }, 0.2);
     }
 
     function handleSlideChange(swiperInstance) {
@@ -265,56 +298,67 @@ document.addEventListener("DOMContentLoaded", (event) => {
     const ins_list = document.querySelector(".instructors_list");
     ins_mm.add("(min-width: 769px)", () => {
          // 이 안의 코드는 뷰포트 너비가 769px 이상일 때만 실행됩니다.
-    const tl_pc = gsap.timeline({
+        // 타이틀은 pin 전에 미리 트리거 (별도 타임라인)
+        const tl_title = gsap.timeline({
             scrollTrigger: {
                 trigger: ".instructors",
-                start: "top 100px",
-                pin:true,
-                scrub:1,
+                start: "top 30%", // pin의 start(top 100px)보다 훨씬 이른 시점
             }
         });
 
-         tl_pc
-        .from(instructors_split.chars,{
-            y: 80,
-            opacity: 0,
-            stagger: 0.05,
-            duration: 0.6,
-            ease: "power3.out"
-        })
-       .from(".instructors .h2_desc",{
-            y: 50,
-            opacity: 0,
-            duration: 0.6,
-            ease: "power3.out"
-        },"-=0.3")
-        .to(".instructors_list li .instructors_photo img", {
-            y: '0%',
-            rotate: 0,
-            scale: 1,
-            duration: 1.1,
-            stagger: 0.1,
-            ease: 'back.out(1.6)',
-        })
-        .to(".instructors_name", {
-            y: 0,
-            opacity: 1,
-            duration: 0.6,
-            stagger: 0.05,
-            ease: 'power2.out',
-        }, "-=0.6")
-        .from(".logo_ani1", {
-            opacity: 0,
-            duration: 0.6,
-            ease: "power3.out"
+        tl_title
+            .from(instructors_split.chars, {
+                y: 80,
+                opacity: 0,
+                stagger: 0.05,
+                duration: 0.6,
+                ease: "power3.out"
+            })
+            .from(".instructors .h2_desc", {
+                y: 50,
+                opacity: 0,
+                duration: 0.6,
+                ease: "power3.out"
+            }, "-=0.3");
+
+        // 사진/텍스트만 pin+scrub으로 남김
+        const tl_pc = gsap.timeline({
+            scrollTrigger: {
+                trigger: ".instructors",
+                start: "top 100px",
+                pin: true,
+                scrub: 1,
+            }
         });
 
+        tl_pc
+            .from(".logo_ani1", {
+                opacity: 0,
+                duration: 0.6,
+                ease: "power3.out"
+            })
+        .to(".instructors_list li .instructors_photo img", {
+                y: '0%',
+                rotate: 0,
+                scale: 1,
+                duration: 1.1,
+                stagger: 0.1,
+                ease: 'back.out(1.6)',
+            })
+            .to(".instructors_name", {
+                y: 0,
+                opacity: 1,
+                duration: 0.6,
+                stagger: 0.05,
+                ease: 'power2.out',
+            }, "-=0.6")
+        return () => {
+            tl_title.scrollTrigger && tl_title.scrollTrigger.kill();
+            tl_title.kill();
 
-    return () => {
             tl_pc.scrollTrigger && tl_pc.scrollTrigger.kill();
             tl_pc.kill();
 
-            // PC 애니메이션이 남긴 인라인 스타일 완전히 제거
             gsap.set(".instructors_list li .instructors_photo img", {
                 clearProps: "transform,opacity"
             });
