@@ -166,7 +166,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
         {
             scrollTrigger: {
             trigger: ".danceclass",
-            start:"top 30%",
+            start:"top 20%",
+
            }
          }
     );
@@ -327,7 +328,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 trigger: ".instructors",
                 start: "top 100px",
                 pin: true,
-                scrub: 1,
+                end: "+=1500",
             }
         });
 
@@ -442,6 +443,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
         };
     });
   
+    //instructors 끝
+
+    //mobile menu
     const menuPanel = document.querySelector('.mobile-menu');       // 패널
     const menuLinks = document.querySelectorAll('.mobile-menu ul li a'); // 텍스트 (a 태그들)
     menuLinks.forEach(link => {

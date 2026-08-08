@@ -49,6 +49,7 @@ iframe {
     max-width: 100%;
 }
 
+html{scroll-behavior: smooth;}
 /* button, input 기본 스타일 리셋*/
 button {
     all: unset;
@@ -459,6 +460,7 @@ p.h2_desc{
     line-height: 1;
     transform: translateX(40px); /* y 대신 x */
     opacity: 0;
+    background-color: var(--bg-color);
 }
 .classSwiper h4 .class_name b::after{
     content:'|';
@@ -694,11 +696,14 @@ a.button {
 /* Moments */
 
 .moments {
-    max-width: 1920px;
     position: relative;
     border-top: 1px solid var(--border-color);
     padding: var(--space-100) var(--space-50);
     overflow: hidden;
+}
+.max_inner{
+    max-width: 1920px;
+    margin:0 auto;
 }
 .moments ul {
     padding-top:var(--space-40);
@@ -1030,6 +1035,7 @@ textarea {
     }
     section .danceclass{
         scroll-margin-top: 0;
+        height: auto;
     }
     .logo-pc {
 
@@ -1083,8 +1089,8 @@ textarea {
     }
     /*danceclass*/
     .danceclass{
-        height: auto;
         min-height: initial;
+        height: auto;
     }
     .danceclass .container{
         max-width: 100%;
@@ -1103,8 +1109,8 @@ textarea {
         aspect-ratio: 16 / 9;
     }
     .class_card{
-        padding-top:var(--space-100);
-        padding-bottom:var(--space-100);
+        padding-top:var(--space-24);
+        padding-bottom:var(--space-24);
     }
 
     .classSwiper h4 .class_genre{
@@ -1132,7 +1138,10 @@ textarea {
         display: block;
     }
 
-
+    .contact .container h2 {
+        width: 100%;
+        padding: 50px ;
+    }
     .contact .h2_title {
         font-size: clamp(30px,4.5vw,60px);
         writing-mode: unset;
@@ -1192,6 +1201,15 @@ textarea {
     .class_card{
         padding-top:20px;
         padding-bottom:10px;
+    }
+    .classSwiper h4 .class_name b{
+        display: block;
+        padding-bottom:8px;
+    }
+    .classSwiper h4 .class_name b::after{
+        content:none;
+        padding-right:0px;
+        padding-left:0px;
     }
     /*instructors*/
     .instructors_list{
